@@ -7,10 +7,6 @@ float[][] terrain;
 float rotX=PI/3;
 float rotY, scaleFactor;
 
-float CameraX = 800; //800
-float CameraY = 1500; //1500
-float CameraZ = 300; //300
-
 ArrayList<Raindrop> rd;
 ArrayList<Cloud> cd;
 int widths = 1600, heights = 1200;
@@ -239,7 +235,6 @@ void draw() {
     }
   }
 
-  //camera(CameraX, CameraY, CameraZ, 500, 500, 0.0, 0.0, 0.0, -1.0);
   try
   {
     for (int i=0; i<raindropMax; i++)
@@ -345,29 +340,6 @@ void mouseWheel(MouseEvent event) { //Added
 }
 void keyPressed()
 {
-  if (keyCode == UP) 
-  {
-    CameraY -= 100;
-  } else if (keyCode == DOWN) 
-  {
-    CameraY += 100;
-  }
-  if (keyCode == RIGHT) 
-  {
-    CameraX += 100;
-  }
-  if (keyCode == LEFT) 
-  {
-    CameraX += -100;
-  }
-  if (key == 'a') 
-  {
-    CameraZ += 100;
-  }
-  if (key == 'z') 
-  {
-    CameraZ += -100;
-  }
   if (key == 'w')
   {
     targetRaindrop += 100;
