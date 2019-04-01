@@ -10,7 +10,7 @@ float rotY, scaleFactor;
 ArrayList<Raindrop> rd;
 ArrayList<Cloud> cd;
 int widths = 1600, heights = 1200;
-int xMax, yMax; //1000, 1000
+int xMax, yMax;
 int xMin, yMin;
 int raindropMax = 500;
 int targetRaindrop = 500;
