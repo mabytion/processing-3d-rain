@@ -19,7 +19,7 @@ int margin = 50;
 int cloudCount = 1000;
 float waterLevel;
 float waterBottom = -80;
-float sinkRate = 1.1;
+float sinkRate = 0.11;
 float cloudHeight = 700;
 
 boolean cloudFlags = true;
@@ -176,7 +176,7 @@ class Sink extends Thread
         {
           waterLevel = cloudHeight-50;
         }
-        sleep(100);
+        sleep(10);
       }
       catch(InterruptedException e)
       {
@@ -304,7 +304,7 @@ void draw() {
   text("raindrop >> " + raindropMax + "drops", xMin, margin*16);
   text("targetdrop >> " + targetRaindrop + "drops", xMin, margin*17);
   text("waterlevel >> " + (waterLevel+(-waterBottom)) + "pixels", xMin, margin*18);
-  text("sink >> " + sinkRate * 10 + "pixels/sec", xMin, margin*19);
+  text("sink >> " + sinkRate * 100 + "pixels/sec", xMin, margin*19);
   text("key >> " + key, xMin, margin*20);
   text("keyCode >> " + keyCode, xMin, margin*21);
 
@@ -351,11 +351,11 @@ void keyPressed()
   }
   if (key == 'e')
   {
-    sinkRate += 0.1;
+    sinkRate += 0.01;
   }
   if (key == 'd')
   {
-    sinkRate -= 0.1;
+    sinkRate -= 0.01;
   }
   if (key == 'r')
   {
