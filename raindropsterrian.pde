@@ -215,6 +215,7 @@ void setup() {
   timer = new Timer();
   sink.start();
   reduce.start();
+  timer.timerStop();
 }
 
 
