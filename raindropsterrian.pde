@@ -5,7 +5,7 @@ int h=1200;
 float[][] terrain;
 
 float rotX=PI/3;
-float rotY, scaleFactor;
+float rotZ, scaleFactor;
 
 ArrayList<Raindrop> rd;
 ArrayList<Cloud> cd;
@@ -17,8 +17,9 @@ int targetRaindrop = 500;
 int scale = 1;
 int margin = 50;
 int cloudCount = 1000;
+int r = 0, g = 255, b = 255;
 float waterLevel;
-float waterBottom = -80;
+float waterBottom = -140;
 float sinkRate = 0.11;
 float cloudHeight = 700;
 
@@ -50,6 +51,7 @@ class Cloud
 class Raindrop
 {
   float speed = 6;
+  float tale = random(40, 120);
   float rainSize = random(1, 4);
   float gravity = rainSize/10;
   float x, y;
@@ -68,17 +70,17 @@ class Raindrop
     if (z<waterLevel)
     {
       dropFlags = false;
-      waterLevel += rainSize/100;
+      waterLevel += (rainSize/100) * (tale/75);
     }
 
     if (dropFlags)
     {
       pushMatrix();
-      fill(0, 255, 255, 80);
+      fill(r, g, b, 128);
       translate(x, y, z);
       z -= speed;
       speed += gravity;
-      box(rainSize);
+      box(rainSize, rainSize, tale);
       popMatrix();
     }
   }
@@ -213,11 +215,11 @@ void setup() {
   Sink sink = new Sink();
   DropReduce reduce = new DropReduce();
   timer = new Timer();
+  
   sink.start();
   reduce.start();
   timer.timerStop();
 }
-
 
 float flying=1;
 
@@ -225,7 +227,7 @@ void draw() {
   background(120, 85, 0);
   translate(575, 400);
   rotateX(rotX);
-  rotateY(-rotY);
+  rotateZ(rotZ);
   scale(0.35 + scaleFactor);
 
   if (cloudFlags)
@@ -261,41 +263,42 @@ void draw() {
   pushMatrix();
   beginShape(QUADS);
   // 1
-  fill(0, 255, 255, 80);
-  vertex(xMin, yMin, waterBottom);
-  vertex(xMin, yMax, waterBottom);
-  vertex(xMin, yMax, waterLevel);
-  vertex(xMin, yMin, waterLevel);
+  //fill(0, 255, 255, 50);
+  fill(r, g, b, 128);
+  vertex(xMin-1, yMin-1, waterBottom);
+  vertex(xMin-1, yMax-20, waterBottom);
+  vertex(xMin-1, yMax-20, waterLevel);
+  vertex(xMin-1, yMin-1, waterLevel);
 
   // 2
-  vertex(xMin, yMin, waterBottom);
-  vertex(xMax, yMin, waterBottom);
-  vertex(xMax, yMax, waterBottom);
-  vertex(xMin, yMax, waterBottom);
+  vertex(xMin-1, yMin-1, waterBottom);
+  vertex(xMax-20, yMin-1, waterBottom);
+  vertex(xMax-20, yMax-20, waterBottom);
+  vertex(xMin-1, yMax-20, waterBottom);
 
   // 3
-  vertex(xMin, yMax, waterBottom);
-  vertex(xMax, yMax, waterBottom);
-  vertex(xMax, yMax, waterLevel);
-  vertex(xMin, yMax, waterLevel);
+  vertex(xMin-1, yMax-20, waterBottom);
+  vertex(xMax-20, yMax-20, waterBottom);
+  vertex(xMax-20, yMax-20, waterLevel);
+  vertex(xMin-1, yMax-20, waterLevel);
 
   // 4
-  vertex(xMin, yMin, waterBottom);
-  vertex(xMax, yMin, waterBottom);
-  vertex(xMax, yMin, waterLevel);
-  vertex(xMin, yMin, waterLevel);
+  vertex(xMin-1, yMin-1, waterBottom);
+  vertex(xMax-20, yMin-1, waterBottom);
+  vertex(xMax-20, yMin-1, waterLevel);
+  vertex(xMin-1, yMin-1, waterLevel);
 
   // 5
-  vertex(xMax, yMin, waterBottom);
-  vertex(xMax, yMax, waterBottom);
-  vertex(xMax, yMax, waterLevel);
-  vertex(xMax, yMin, waterLevel);
+  vertex(xMax-20, yMin-1, waterBottom);
+  vertex(xMax-20, yMax-20, waterBottom);
+  vertex(xMax-20, yMax-20, waterLevel);
+  vertex(xMax-20, yMin-1, waterLevel);
 
   // 6
-  vertex(xMin, yMin, waterLevel);
-  vertex(xMax, yMin, waterLevel);
-  vertex(xMax, yMax, waterLevel);
-  vertex(xMin, yMax, waterLevel);
+  vertex(xMin-1, yMin-1, waterLevel);
+  vertex(xMax-20, yMin-1, waterLevel);
+  vertex(xMax-20, yMax-20, waterLevel);
+  vertex(xMin-1, yMax-20, waterLevel);
   endShape();
   popMatrix();
 
@@ -312,7 +315,7 @@ void draw() {
   for (int y=0; y<rows; y++) {
     float xoff=0;
     for (int x=0; x<cols; x++) {
-      terrain[x][y]=map(noise(xoff, yoff), 0, 1, -100, 100);
+      terrain[x][y]=map(noise(xoff, yoff), 0, 1, -200, 200);
       xoff +=0.2;
     }
     yoff +=0.2;
@@ -330,9 +333,27 @@ void draw() {
 
     endShape();
   }
+
+  beginShape(TRIANGLE_STRIP);
+  for (int x=0; x<cols; x++)
+  {
+    fill(0, 128-terrain[x][0], 0);
+    vertex(x*scl-800, -600, waterBottom);
+    vertex(x*scl-800, -600, terrain[x][0]);
+  }
+  endShape();
+  
+  beginShape(TRIANGLE_STRIP);
+  for (int x=0; x<cols; x++)
+  {
+    fill(0, 128-terrain[x][0], 0);
+    vertex(x*scl-800, 580, waterBottom);
+    vertex(x*scl-800, 580, terrain[x][rows-1]);
+  }
+  endShape();
 }
 void mouseDragged() { //Added
-  rotY -= (mouseX - pmouseX) * 0.01;
+  rotZ -= (mouseX - pmouseX) * 0.01;
   rotX -= (mouseY - pmouseY) * 0.01;
 }
 void mouseWheel(MouseEvent event) { //Added
